@@ -1,36 +1,17 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { prisma } from "@/lib/prisma"
-import { redirect } from "next/navigation"
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useActionState } from "react";
+import * as actions from "@/actions";
+
 
 const CreateSnippet = () => {
-
-  
-  async function createSnippet (formData:FormData){
-    "use server" // use server directive to run this function on the server
-    const title = formData.get('title') as string | null;
-    const code = formData.get('code') as string | null;
-
-    if (!title || !code) {
-      throw new Error("Title and code are required");
-    }
-        code: code as string
-    const snippet = await prisma.snippet.create({
-      data: {
-        title: title,
-        code: code
-      }
-    })
-
-    console.log(snippet);
-   
-    redirect("/")
-   
-  }
-
-
+  const [formState, createSnippet] = useActionState(actions.createSnippet, {
+    message: "",
+  });
 
   return (
     <div className="min-h-screen w-full font-mono bg-zinc-800 text-white">
@@ -62,6 +43,13 @@ const CreateSnippet = () => {
                 placeholder="Paste your code snippet here"
               />
             </div>
+            <div>
+              {formState.message && (
+                <p className="text-red-500 text-sm border border-red-800 rounded-md shadow-sm p-2">
+                  {formState.message}
+                </p>
+              )}
+            </div>
             <Button
               type="submit"
               className="w-full py-2 px-4 bg-zinc-700 hover:bg-zinc-600 rounded-md shadow-sm text-sm font-medium transition-colors duration-200"
@@ -72,8 +60,9 @@ const CreateSnippet = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateSnippet
+export default CreateSnippet;
+
 
