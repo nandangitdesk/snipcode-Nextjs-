@@ -8,6 +8,9 @@ import { useActionState } from "react";
 import * as actions from "@/actions";
 
 
+//what is useActionState? - it is a hook that is used to manage the state of a form in react. 
+
+
 const CreateSnippet = () => {
   const [formState, createSnippet] = useActionState(actions.createSnippet, {
     message: "",
